@@ -1,11 +1,24 @@
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
 <script type="text/javascript">
-
     var STRIPE_PUBLIC_KEY = '{{ public_key }}';
-
     // This identifies your website in the createToken call below
     Stripe.setPublishableKey(STRIPE_PUBLIC_KEY);
+
+    var errorMessages = {
+        incorrect_number: "{{ 'stripe.error.incorrect_number'|trans({}, 'stripe') }}",
+        invalid_number: "{{ 'stripe.error.invalid_number'|trans({}, 'stripe') }}",
+        invalid_expiry_month: "{{ 'stripe.error.invalid_expiry_month'|trans({}, 'stripe') }}",
+        invalid_expiry_year: "{{ 'stripe.error.invalid_expiry_year'|trans({}, 'stripe') }}",
+        invalid_cvc: "{{ 'stripe.error.invalid_cvc'|trans({}, 'stripe') }}",
+        expired_card: "{{ 'stripe.error.expired_card'|trans({}, 'stripe') }}",
+        incorrect_cvc: "{{ 'stripe.error.incorrect_cvc'|trans({}, 'stripe') }}",
+        incorrect_zip: "{{ 'stripe.error.incorrect_zip'|trans({}, 'stripe') }}",
+        card_declined: "{{ 'stripe.error.card_declined'|trans({}, 'stripe') }}",
+        missing: "{{ 'stripe.error.missing'|trans({}, 'stripe') }}",
+        processing_error: "{{ 'stripe.error.processing_error'|trans({}, 'stripe') }}",
+        rate_limit:  "{{ 'stripe.error.rate_limit'|trans({}, 'stripe') }}",
+    };
 
     /**
      * Validation for stripe payment
@@ -14,8 +27,13 @@
         var $form = $('#payment-form');
 
         if (response.error) {
+            var errorMsg = response.error.message;
+            if (response.error.type == 'card_error' && response.error.code in errorMessages) {
+                errorMsg = errorMessages[response.error.code];
+            }
+
             // Show the errors on the form
-            $form.find('.payment-errors').text(response.error.message);
+            $form.find('.payment-errors').text(errorMsg);
             $form.find('button').prop('disabled', false);
         } else {
             // token contains id, last4, and card type
@@ -29,7 +47,6 @@
     };
 
     $("#payment-submit").on("click", function(event){
-
         var $form = $(this).closest('form');
         $form.find('button').prop('disabled', true);
 
@@ -37,5 +54,4 @@
 
         return false;
     });
-
 </script>

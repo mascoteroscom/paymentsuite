@@ -1,0 +1,14 @@
+stripe:
+    error:
+        incorrect_number: El número de la tarjeta es incorrecto.
+        invalid_number: El número de la tarjeta no es un número de tarjeta de crédito válido.
+        invalid_expiry_month: El mes de caducidad de la tarjeta es inválido.
+        invalid_expiry_year: El año de caducidad de la tarjeta es inválido
+        invalid_cvc: El código de seguridad de la tarjeta es inválido.
+        expired_card: La tarjeta ha caducado.
+        incorrect_cvc: El código de seguridad de la tarjeta es incorrecto.
+        incorrect_zip: Error  de validación en el código de seguridad de la tarjeta.
+        card_declined: La tarjeta ha sido rechazada.
+        missing: There is no card on a customer that is being charged.
+        processing_error: Se ha producido un error al procesar la tarjeta.
+        rate_limit:  An error occurred due to requests hitting the API too quickly. Please let us know if you're consistently running into this error.
