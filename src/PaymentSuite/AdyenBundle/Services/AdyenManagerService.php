@@ -206,9 +206,9 @@ class AdyenManagerService
         if (!empty($method->getShopperIp())) {
             $paymentData['shopperIP'] = $method->getShopperIp();
         }
+        $paymentData['shopperEmail'] = $method->getShopperEmail();
 
         if (!empty($method->getRecurringDetailReference())) {
-            $paymentData['shopperEmail'] = $method->getShopperEmail();
             $paymentData['shopperInteraction'] = $method->getShopperInteraction();
             $paymentData['selectedRecurringDetailReference'] = $method->getRecurringDetailReference();
         }
