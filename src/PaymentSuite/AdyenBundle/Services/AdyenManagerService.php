@@ -151,6 +151,40 @@ class AdyenManagerService
     }
 
     /**
+     * Step 4: Complete the 3D Secure payment
+     * @param PaymentMethodInterface $method
+     * @param array $authorizationData
+     * @return mixed
+     * @throws PaymentException
+     */
+    public function process3DAuthorization(
+        PaymentMethodInterface $method,
+        array $authorizationData = []
+    ) {
+        $r = [];
+        try {
+            $r = $this->callAuthorize3DSApi($authorizationData);
+        } catch (\Exception $e) {
+            /*
+             * The Soap call failed
+             */
+            $this
+                ->eventDispatcher
+                ->notifyPaymentOrderFail(
+                    $this->paymentBridge,
+                    $method
+                );
+
+            $this->logger->addError('PaymentException: ' . $e->getMessage());
+            $this->paymentBridge->setError($e->getMessage());
+            $this->paymentBridge->setErrorCode($e->getCode());
+            throw new PaymentException($e->getMessage());
+        }
+
+        return $r;
+    }
+
+    /**
      * @param PaymentMethodInterface $method
      * @param integer $amount
      * @param bool $ps2Available
@@ -567,11 +601,23 @@ class AdyenManagerService
     }
 
     /**
+     * @param $paymentData
+     * @return mixed
+     * @throws \Adyen\AdyenException
+     */
+    private function callAuthorize3DSApi($paymentData)
+    {
+        $paymentService = $this->adyenClientService->getPaymentService();
+
+        return $paymentService->authorise3D($paymentData);
+    }
+
+    /**
      * @param PS2ValidationCommandInterface $ps2ValidationData
      * @param array $browserInfo
      * @return array
      */
-    private function  setAppRequestData(PS2ValidationCommandInterface $ps2ValidationData, array $browserInfo = []): array
+    private function setAppRequestData(PS2ValidationCommandInterface $ps2ValidationData, array $browserInfo = []): array
     {
         $paymentData = [];
 
