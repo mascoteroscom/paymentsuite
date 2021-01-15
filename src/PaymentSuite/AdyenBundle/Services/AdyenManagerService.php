@@ -159,11 +159,12 @@ class AdyenManagerService
      */
     public function process3DAuthorization(
         PaymentMethodInterface $method,
+        $amount,
         array $authorizationData = []
     ) {
-        $r = [];
+        $response = [];
         try {
-            $r = $this->callAuthorize3DSApi($authorizationData);
+            $response = $this->callAuthorize3DSApi($authorizationData);
         } catch (\Exception $e) {
             /*
              * The Soap call failed
@@ -181,7 +182,7 @@ class AdyenManagerService
             throw new PaymentException($e->getMessage());
         }
 
-        return $r;
+        return $this->processPaymentResponse($method, $amount, true, $response);
     }
 
     /**
