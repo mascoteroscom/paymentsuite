@@ -31,6 +31,8 @@ use Mascoteros\Checkout\Application\Command\PS2ValidationCommandInterface;
 class AdyenManagerService
 {
     const REFUSED = 'Refused';
+    const ERROR = 'Error';
+    const CANCELLED = 'Cancelled';
     const AUTHORISED = 'Authorised';
     const IDENTIFY_SHOPPER = 'IdentifyShopper';
     const CHALLENGE_SHOPPER = 'ChallengeShopper';
